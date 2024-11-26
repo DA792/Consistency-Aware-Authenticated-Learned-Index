@@ -66,9 +66,11 @@ public class PVLBTreeChain {
 
         int len = 10000;
         int queryLen = 10000;
-        long[] dataset = IOTools.readData("D:/mycode/mywork/work4/data_processing/Uniform_100M", len);
+        long low = 10, high = 1000000000L;
 
-        long low = IOTools.low, high = IOTools.high;
+        long[] dataset = Utils.buildRandArr(len, low, high, null);
+
+        low = IOTools.low; high = IOTools.high;
 //        long[] dataset = Utils.buildRandArr(len, low, high, null);
 
         int n = 128;
