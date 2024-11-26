@@ -44,7 +44,7 @@ javac HPVL_tree_index/HPVLChain.java PVL_tree_index/PVLChain.java PVLB_tree_inde
 java HPVL_tree_index.HPVLChain
 java PVL_tree_index.PVLChain
 java PVLB_tree_index.PVLBChain
-```bash
+```
 
 ## Performance Testing
 
