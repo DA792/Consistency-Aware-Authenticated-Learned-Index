@@ -1,1 +1,1 @@
-# Consistency-Aware-Authenticated-Learned-Index
+# Consistency-Aware Scalable and Authenticated Learned Index for Range Query
