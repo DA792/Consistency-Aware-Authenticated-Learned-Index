@@ -14,20 +14,19 @@ This repository contains the implementation of three authenticated learned index
 
 - Java
 - SHA-256 for cryptographic hashing
-- JUnit for testing and validation
 
 ## Code Structure
 
 The project is organized into several key directories, each containing the implementation of the respective index and its associated algorithms:
 
 ### HPVL_tree_index
-Contains the implementation of the HPVL-tree index, which combines the benefits of PVL-tree and PVLB-tree for enhanced query and update efficiency. Includes `HPVLChain.java` for performance testing.
+Contains the implementation of the HPVL-tree index, which combines the benefits of PVL-tree and PVLB-tree for enhanced query and update efficiency. Includes `HPVLIndex.java` for performance testing.
 
 ### PVL_tree_index
-Contains the implementation of the PVL-tree index, optimized for lightweight authenticated range queries. Includes `PVLChain.java` for performance testing.
+Contains the implementation of the PVL-tree index, optimized for lightweight authenticated range queries. Includes `PVLTreeChain.java` for performance testing.
 
 ### PVLB_tree_index
-Contains the implementation of the PVLB-tree index, designed for efficient updates with a buffer mechanism. Includes `PVLBChain.java` for performance testing.
+Contains the implementation of the PVLB-tree index, designed for efficient updates with a buffer mechanism. Includes `PVLBTreeChain.java` for performance testing.
 
 ## Usage
 
