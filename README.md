@@ -1,49 +1,59 @@
-Authenticated Learned Index for Outsourced Database with Version Control Update
-This repository provides a comprehensive implementation of the novel authenticated learned index structures introduced in the paper "Consistency-Aware Scalable and Authenticated Learned Index for Range Query." The implementation is designed to facilitate efficient and authenticated range queries in outsourced database environments with version control.
+# Authenticated Learned Index Implementation
 
-Features
-Implements the HPVL-tree, a hybrid index framework that combines the efficiency of query-friendly PVL-tree and update-friendly PVLB-tree.
-Supports dynamic authenticated queries with a version control update mechanism for consistency guarantee.
-Utilizes machine learning models to optimize query processing and verification.
-Provides extensive theoretical and experimental analysis to demonstrate performance improvements over state-of-the-art approaches.
-Technology Stack
-Java
-SHA-256 for cryptographic hashing
-JUnit for testing and validation
-Usage
-We have provided a test suite to evaluate the performance of the authenticated learned index structures. To run the tests, execute the following command:
+This repository contains the implementation of three authenticated learned index structures: HPVL-tree, PVL-tree, and PVLB-tree. These indexes are designed for efficient and authenticated range queries in outsourced database environments with version control.
 
-bash
-javac Test.java
-java Test
-This will run the test cases for index construction, querying, and verification.
+## Features
 
-Code Structure
-The project is organized into several key directories, each with a specific purpose:
+- **HPVL-tree**: A hybrid index framework combining the efficiency of query-friendly PVL-tree and update-friendly PVLB-tree.
+- **PVL-tree**: An index structure optimized for query performance using learned models.
+- **PVLB-tree**: An index structure optimized for update performance with a buffer mechanism.
+- Consistency guarantee through version control update mechanism.
+- Support for dynamic authenticated range queries.
 
-dataowner
-This folder contains the modules related to the Data Owner (DO) entity, responsible for building the authenticated data structures (ADS), generating update information, and updating the digest to form the updated ADS with the new version.
+## Technology Stack
 
-cloudserver
-This folder houses the Cloud Server (CS) related modules, which handle client query requests, execute queries over the ADS, and provide verification information for query results.
+- Java
+- SHA-256 for cryptographic hashing
+- JUnit for testing and validation
 
-queryuser
-This folder contains the modules for the Query User (QU) entity, responsible for obtaining the latest digest from the DO, initiating query requests with the queried version, and verifying the returned results from the CS.
+## Code Structure
 
-common
-This folder includes common utilities and data structures used across different modules, such as cryptographic functions and ADS implementations.
+The project is organized into several key directories, each containing the implementation of the respective index and its associated algorithms:
 
-test
-This folder contains the test suite for validating the functionality and performance of the authenticated learned index structures.
+### HPVL_tree_index
+Contains the implementation of the HPVL-tree index, which combines the benefits of PVL-tree and PVLB-tree for enhanced query and update efficiency. Includes `HPVLChain.java` for performance testing.
 
-Getting Started
-To get started with the implementation, follow these steps:
+### PVL_tree_index
+Contains the implementation of the PVL-tree index, optimized for lightweight authenticated range queries. Includes `PVLChain.java` for performance testing.
 
-Clone the repository to your local machine.
-Compile the Java files using javac.
-Run the test suite using java to evaluate the performance of the index structures.
-Contributing
+### PVLB_tree_index
+Contains the implementation of the PVLB-tree index, designed for efficient updates with a buffer mechanism. Includes `PVLBChain.java` for performance testing.
+
+## Usage
+
+To use the index implementations and run the performance tests, follow these steps:
+
+1. Clone the repository to your local machine.
+2. Compile the Java files using `javac`.
+3. Run the test suite using `java` to evaluate the performance of the index structures.
+
+Example compilation and execution commands:
+
+```bash
+javac HPVL_tree_index/HPVLChain.java PVL_tree_index/PVLChain.java PVLB_tree_index/PVLBChain.java
+java HPVL_tree_index.HPVLChain
+java PVL_tree_index.PVLChain
+java PVLB_tree_index.PVLBChain
+
+## Performance Testing
+
+Each `XXChain.java` file provides a comprehensive test suite for the corresponding index:
+
+- **Index Construction Performance**: Measures the time and resources required to build the index.
+- **Query Performance**: Evaluates the efficiency of range queries on the index.
+- **Verification Overhead**: Assesses the computational and communication costs associated with query verification.
+- **Communication Overhead**: Measures the amount of data transmitted during query verification.
+
+## Contributing
+
 Contributions to the project are welcome. Please submit a pull request with your improvements, and ensure that your changes are well-documented and include relevant unit tests.
-
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
