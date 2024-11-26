@@ -40,10 +40,10 @@ To use the index implementations and run the performance tests, follow these ste
 Example compilation and execution commands:
 
 ```bash
-javac HPVL_tree_index/HPVLChain.java PVL_tree_index/PVLChain.java PVLB_tree_index/PVLBChain.java
-java HPVL_tree_index.HPVLChain
-java PVL_tree_index.PVLChain
-java PVLB_tree_index.PVLBChain
+javac HPVL_tree_index/HPVLIndex.java PVL_tree_index/PVLTreeChain.java PVLB_tree_index/PVLBTreeChain.java
+java HPVL_tree_index.HPVLIndex
+java PVL_tree_index.PVLTreeChain
+java PVLB_tree_index.PVLBTreeChain
 ```
 
 ## Performance Testing
