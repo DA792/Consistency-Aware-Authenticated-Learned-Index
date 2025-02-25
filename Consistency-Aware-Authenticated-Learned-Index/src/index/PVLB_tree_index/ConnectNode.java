@@ -6,6 +6,7 @@ import index.learned_node_info.OptPLA;
 import index.learned_node_info.Segment;
 import utils.SHA;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 import static index.PVLB_tree_index.PVLBTree.*;
 import static index.HPVL_tree_index.HPVLIndex.*;
 
-public class ConnectNode {
+public class ConnectNode implements Serializable {
     public PVLLeafNode modelNode;
     public MBNode buf;
     public String hash;
@@ -90,7 +91,7 @@ public class ConnectNode {
         int i = 0, j = 0;
         boolean tag = false;
         while (i < modelKeys.length || j < bufKeys.size() || !tag) {
-            long min = Integer.MAX_VALUE;
+            long min = Long.MAX_VALUE;
             if (i < modelKeys.length) min = modelKeys[i];
             if (j < bufKeys.size() && bufKeys.get(j) < min) min = bufKeys.get(j);
             if (!tag && k < min) min = k;

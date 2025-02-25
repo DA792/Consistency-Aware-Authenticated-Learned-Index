@@ -262,10 +262,12 @@ public class PVLTree {
         int i = voNode.startPos;
         if (i == 0) {
             bStart = new byte[32];
-            bEnd = Utils.encPosHash(sk1, r, voNode.voPies.get(0), voNode.chdRes.size() - 1);
+//            bEnd = Utils.encPosHash(sk1, r, voNode.voPies.get(0), voNode.chdRes.size() - 1);
+            bEnd = Utils.encPosHash(sk1, r, voNode.voPies.get(0), voNode.endPos);
         } else {
-            bStart = Utils.encPosHash(sk1, r, voNode.voPies.get(0), voNode.startPos);
-            bEnd = Utils.encPosHash(sk1, r, voNode.voPies.get(1), voNode.startPos + voNode.chdRes.size() - 1);
+            bStart = Utils.encPosHash(sk1, r, voNode.voPies.get(0), i - 1);
+//            bEnd = Utils.encPosHash(sk1, r, voNode.voPies.get(1), voNode.startPos + voNode.chdRes.size() - 1);
+            bEnd = Utils.encPosHash(sk1, r, voNode.voPies.get(1), voNode.endPos);
         }
 
 
@@ -277,23 +279,29 @@ public class PVLTree {
                 }
             }
 
-            for (; i < voNode.n; ++i) {
+//            for (; i < voNode.n; ++i) {
+//                bStart = SHA.bytesXor(bStart, SHA.hashToBytes(sk0 + res.get(resTag++)));
+//                if (Arrays.equals(bStart, bEnd))
+//                    break;
+//            }
+//            if (i == voNode.n)
+//                return false;
+
+            for (; i <= voNode.endPos; ++i) {
                 bStart = SHA.bytesXor(bStart, SHA.hashToBytes(sk0 + res.get(resTag++)));
-                if (Arrays.equals(bStart, bEnd))
-                    break;
             }
 
-            if (i == voNode.n)
+            if (!Arrays.equals(bStart, bEnd))
                 return false;
 
             //verify right bound
-            if (isLastKey && i == voNode.n - 1 || res.get(res.size() - 1) >= tar) {
+            if (isLastKey && i == voNode.n || res.get(res.size() - 1) >= tar) {
                 resInfo.hasRightBound = true;
             }
 
         } else {
             for (int j = 0; j < voNode.chdRes.size(); ++j) {
-                bStart = SHA.bytesXor(bStart, SHA.hashToBytes(sk0 + voNode.chdRes.get(j)));
+                bStart = SHA.bytesXor(bStart, SHA.hashToBytes(sk0 + voNode.chdRes.get(j) + voNode.chdNode.get(j).n));
 
                 if (!verify(tar, voNode.chdRes.get(j), voNode.chdNode.get(j), res, isFirstKey && i + j == 0, isLastKey && i + j == voNode.n - 1, resInfo))
                     return false;
@@ -368,7 +376,7 @@ public class PVLTree {
         ResInfo resInfo = new ResInfo();
 
         // verify every node pies
-        if (!travelVoTree(low, high, rootR, PVL_res.node, PVL_res.res, true, true, resInfo))
+        if (!verify(low, rootR, PVL_res.node, PVL_res.res, true, true, resInfo))
             return false;
 
         // has not left or right bound
@@ -384,59 +392,64 @@ public class PVLTree {
         System.out.println("ALTree size:" + piSize / 1024.0 / 1024.0 + "mb");
     }
 
+
     public static void main(String[] args) {
-        long queryTime = 0, verifyTime = 0;
-        double voSize = 0;
+
         long s,e;
         long low = 10, high = 1000000000L;
-        int len = 10000000;
+        int len = 100000000;
         int queryLen = 1000;
-        long[] dataset = Utils.buildRandArr(len, low, high, null);
-
+//        long[] dataset = Utils.buildRandArr(len, low, high, null);
+        long[] dataset = IOTools.readData("D:\\paper_source\\work_4\\dataset\\Longitudes_100M", len);
+        double[] queryRange = new double[]{0.0001, 0.001, 0.005, 0.01, 0.015, 0.02};
         int err = 128;
         low = IOTools.low; high = IOTools.high;
 
-//        long[] dataset = Utils.buildRandArr(len, low, high, null);
-//        dataset = new long[]{919236, 728491, 712752, 385900, 430038, 553467, 448787, 194499, 512871, 826561, 137554, 53547, 631968, 738143, 555379, 160345, 293370, 566062, 148117, 711035, 274037, 964254, 364288, 513393, 877288, 359824, 974334, 393946, 173322, 582523, 979664, 500622, 668856, 312812, 716277, 204481, 616840, 927399, 540009, 937969, 224523, 846018, 43837, 972276, 347767, 538457, 102408, 832355, 869575, 938122, 165045, 776116, 852431, 126377, 125541, 522753, 726941, 801243, 785663, 205368, 233414, 225098, 399015, 344310, 568236, 57292, 32688, 490206, 203680, 721463, 516697, 69379, 147378, 731229, 564376, 879459, 987129, 703756, 241707, 629350, 926780, 627777, 339659, 894943, 160583, 320544, 360726, 871261, 356422, 907763, 769288, 341238, 722302, 591254, 875310, 352981, 115740, 930762, 221675, 199798};
-//        Arrays.sort(dataset);
-
+        Arrays.sort(dataset);
         PVLTree PVLTree = new PVLTree(dataset, err);
 
 //        ALTree alTree = new ALTree(new long[]{0}, err);
 //        for (long data :dataset)
 //            alTree = alTree.update(data);
 
-        long[][] queryArr = new long[queryLen][2];
-        long queryDis = (long) ((high - low) * 0.001);
-        for (int i = 0; i < queryLen; ++i) {
-            queryArr[i][0] = (long) (Math.random() * (high - low) + low);
-            queryArr[i][1] = queryArr[i][0] + queryDis;
+        for (double r : queryRange) {
+            long[][] queryArr = new long[queryLen][2];
+            long queryDis = (long) ((high - low) * r);
+            for (int i = 0; i < queryLen; ++i) {
+                queryArr[i][0] = (long) (Math.random() * (high - low) + low);
+                queryArr[i][1] = queryArr[i][0] + queryDis;
+            }
+
+            long queryTime = 0, verifyTime = 0;
+            double voSize = 0;
+
+            for (int i = 0; i < queryLen; ++i) {
+                s = System.nanoTime();
+                PVL_Res PVL_res = PVLTree.rangeQuery(queryArr[i][0], queryArr[i][1]);
+                e = System.nanoTime();
+                queryTime += e - s;
+//                System.out.println("alTree query time:" + (e - s) + "ns");
+
+                double sz = PVL_res.getVOSize() / 1024.0;
+//                System.out.println("VO size: " + sz + "kb");
+                voSize += sz;
+
+                s = System.nanoTime();
+                boolean isPass = PVLTree.verify(queryArr[i][0], PVL_res);
+                e = System.nanoTime();
+                verifyTime += e - s;
+//                System.out.println("alTree verify time:" + (e - s) + "ns");
+            }
+
+            System.out.println("query range: " + r + "!!!");
+            System.out.println("query time:" +  queryTime / queryLen + "ns");
+            System.out.println("verify time:" + verifyTime / queryLen + "ns");
+            System.out.println("vo size:" + voSize / queryLen + "kb");
+
         }
-
-        for (int i = 0; i < queryLen; ++i) {
-
-            s = System.nanoTime();
-            PVL_Res PVL_res = PVLTree.rangeQuery(queryArr[i][0], queryArr[i][1]);
-            e = System.nanoTime();
-            queryTime += e - s;
-            System.out.println("alTree query time:" + (e - s) + "ns");
-
-            double sz = PVL_res.getVOSize() / 1024.0;
-            System.out.println("VO size: " + sz + "kb");
-            voSize += sz;
-
-            s = System.nanoTime();
-            PVLTree.verify(queryArr[i][0], PVL_res);
-            e = System.nanoTime();
-            verifyTime += e - s;
-            System.out.println("alTree verify time:" + (e - s) + "ns");
-        }
-
-        System.out.println("query time:" +  queryTime / queryLen / 1000 + "ms");
-        System.out.println("verify time:" + verifyTime / queryLen / 1000 + "ms");
-        System.out.println("vo size:" + voSize / queryLen + "kb");
 
         PVLTree.getIndexSize();
     }
+
 
 }

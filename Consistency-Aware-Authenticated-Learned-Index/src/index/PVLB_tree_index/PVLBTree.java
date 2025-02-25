@@ -3,6 +3,7 @@ package index.PVLB_tree_index;
 import index.PVL_tree_index.PVLLeafNode;
 import index.PVL_tree_index.VoInfo;
 import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
+import utils.IOTools;
 import utils.SHA;
 import utils.Utils;
 
@@ -66,7 +67,7 @@ public class PVLBTree {
             bStart = new byte[32];
             bEnd = Utils.encPosHash(sk1, r, modelNode.voInfo.voPies.get(0), modelNode.voInfo.endPos);
         } else {
-            bStart = Utils.encPosHash(sk1, r, modelNode.voInfo.voPies.get(0), modelNode.voInfo.startPos);
+            bStart = Utils.encPosHash(sk1, r, modelNode.voInfo.voPies.get(0), i - 1);
             bEnd = Utils.encPosHash(sk1, r, modelNode.voInfo.voPies.get(1), modelNode.voInfo.endPos);
         }
 
@@ -78,7 +79,7 @@ public class PVLBTree {
             return false;
 
         // has not right bound
-        if (i != voInfo.n - 1 && res.get(resTag - 1) < high)
+        if (i != voInfo.n && res.get(resTag - 1) < high)
             return false;
 
         return true;
@@ -163,8 +164,8 @@ public class PVLBTree {
         travelMBTree(low, high, PVLB_res.node, PVLB_res.res, true, true, info);
 
         // has not left or right bound
-        if (!info.hasLeafBound || !info.hasRightBound)
-            return false;
+//        if (!info.hasLeafBound || !info.hasRightBound)
+//            return false;
 
         return root.hash.equals(PVLB_res.node.hash);
     }
@@ -355,26 +356,39 @@ public class PVLBTree {
         long queryTime = 0, verifyTime = 0;
         long s,e;
 
-        int len = 1000000;
+        int len = 20000000;
         int queryLen = 10000;
 
         int n = 128;
-        int err = 256;
+        int err = 128;
 
         long low = 10, high = 1000000000L;
 
-        long[] dataset = Utils.buildRandArr(len, low, high, null);
-//        dataset = new long[]{7051, 1209, 7161, 5523, 6576, 3078, 875, 5453, 8767, 2320, 7712, 8513, 7656, 8656, 7825, 6096};
-//        dataset = new long[]{6193, 7820, 7136, 1545, 5862, 9350, 5375, 9001, 9097, 2194, 7223, 4225, 4990, 3778, 3887, 6053, 5852, 5652, 1983, 2898, 6202, 3326, 515, 865, 9772, 779, 7982, 4928, 5625, 4816, 3878, 3594, 283, 7504, 4803, 6931, 1354, 3290, 9170, 7611, 9577, 1091, 6042, 4711, 417, 616, 3055, 414, 3403, 6526, 5540, 464, 7235, 3625, 3991, 255, 1357, 1208, 9852, 9776, 196, 4964, 200, 2271, 4509, 359, 399, 3462, 5436, 2297, 5, 732, 2070, 1306, 1787, 9417, 4045, 1777, 3980, 573, 1401, 1380, 1102, 4436, 2315, 3204, 9975, 9030, 5429, 1225, 5435, 3628, 6190, 2112, 5194, 1071, 3690, 8957, 8082, 4596};
+        long[] dataset = IOTools.readData("D:\\paper_source\\work_4\\dataset\\Biased_100M", len);
+
 
         PVLBTree alBTree = new PVLBTree(err, n);
 
 
-        s = System.nanoTime();
-        for (long d : dataset)
+        long s1, e1;
+        long buildTime = 0;
+        for (int d = 0; d < len; ++d) {
+            s1 = System.nanoTime();
             alBTree = alBTree.insert(d);
-        e = System.nanoTime();
-        System.out.println("build chain time：" + (e - s) / 1000000000.0 + "s");
+            e1 = System.nanoTime();
+
+            if ((d + 1) % 20000000 == 0) {
+                System.out.println("dataset size: " + (d + 1) + "!!!");
+
+
+            }
+
+        }
+
+        for (long d : dataset)
+
+
+        System.out.println("build chain time：" + buildTime / 1000000000.0 + "s");
 
 
         long[][] queryArr = new long[queryLen][2];

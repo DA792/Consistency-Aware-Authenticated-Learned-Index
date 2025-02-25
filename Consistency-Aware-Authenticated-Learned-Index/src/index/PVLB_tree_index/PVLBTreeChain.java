@@ -1,7 +1,12 @@
 package index.PVLB_tree_index;
 
+import index.PVL_tree_index.PVLTree;
+import index.PVL_tree_index.PVL_Res;
 import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import utils.IOTools;
+import utils.Utils;
+
+import java.util.Arrays;
 
 public class PVLBTreeChain {
 
@@ -61,24 +66,24 @@ public class PVLBTreeChain {
 
 
     public static void main(String[] args) {
-        long queryTime = 0, verifyTime = 0;
+
         long s,e;
 
-        int len = 10000;
-        int queryLen = 10000;
-        long low = 10, high = 1000000000L;
+        int len = 100000000;
+        int queryLen = 1000;
 
-        long[] dataset = Utils.buildRandArr(len, low, high, null);
-
-        low = IOTools.low; high = IOTools.high;
 //        long[] dataset = Utils.buildRandArr(len, low, high, null);
 
-        int n = 128;
-        int err = 2;
-        int chainLen = 1000;
+//        long[] dataset = IOTools.readData("D:\\paper_source\\work_4\\dataset\\Uniform_100M", len);
+        long[] dataset = IOTools.readData("D:\\paper_source\\work_4\\dataset\\Longitudes_100M", len);
+        double[] queryRange = new double[]{0.0001, 0.001, 0.005, 0.01, 0.015, 0.02};
+        int err = 32;
+        long low = IOTools.low; long high = IOTools.high;
+        int chainLen = 10000;
 
-        PVLBTree.setParameter(n, err);
+        PVLBTree.setParameter(64, err);
         PVLBTreeChain mbChain = new PVLBTreeChain(chainLen);
+        Arrays.sort(dataset);
 
         s = System.nanoTime();
         for (long d : dataset) {
@@ -86,38 +91,60 @@ public class PVLBTreeChain {
         }
         e = System.nanoTime();
         System.out.println("build chain time：" + (e - s) / 1000000000.0 + "s");
+        mbChain.getIndexSize();
 
-        long[][] queryArr = new long[queryLen][2];
-        long queryDis = (long) ((high - low) * 0.001);
-        for (int i = 0; i < queryLen; ++i) {
-            queryArr[i][0] = (long) (Math.random() * (high - low) + low);
-            queryArr[i][1] = queryArr[i][0] + queryDis;
+        for (double r : queryRange) {
+            long[][] queryArr = new long[queryLen][2];
+            long queryDis = (long) ((high - low) * r);
+            for (int i = 0; i < queryLen; ++i) {
+                queryArr[i][0] = (long) (Math.random() * (high - low) + low);
+                queryArr[i][1] = queryArr[i][0] + queryDis;
+            }
+
+            long queryTime = 0, verifyTime = 0;
+            double voSize = 0;
+
+            for (int i = 0; i < queryLen; ++i) {
+
+//                queryArr[i][0] = 979298;
+//                queryArr[i][1] = 979397;
+
+                int searchVersion = mbChain.currentVersion - (int) (Math.random() * chainLen);
+                searchVersion = mbChain.currentVersion;
+
+                s = System.nanoTime();
+                PVLB_Res bTree_res = mbChain.rangeQuery(queryArr[i][0], queryArr[i][1], searchVersion);
+                e = System.nanoTime();
+                queryTime += e - s;
+
+                PVLBTree versionTree = mbChain.getVersionTree(searchVersion);
+
+                s = System.nanoTime();
+                boolean isPass = mbChain.verify(versionTree, queryArr[i][0], queryArr[i][1], bTree_res);
+                e = System.nanoTime();
+                verifyTime += e - s;
+
+
+                s = System.nanoTime();
+                PVLB_Res PVLB_res = mbChain.rangeQuery(queryArr[i][0], queryArr[i][1], searchVersion);
+                e = System.nanoTime();
+                queryTime += e - s;
+//                System.out.println("alTree query time:" + (e - s) + "ns");
+
+                double sz = PVLB_res.getVOSize() / 1024.0;
+//                System.out.println("VO size: " + sz + "kb");
+                voSize += sz;
+            }
+
+            System.out.println("query range: " + r + "!!!");
+            System.out.println("query time:" +  queryTime / queryLen + "ns");
+            System.out.println("verify time:" + verifyTime / queryLen + "ns");
+            System.out.println("vo size:" + voSize / queryLen + "kb");
         }
 
-
-        for (int i = 0; i < queryLen; ++i) {
-
-            int searchVersion = mbChain.currentVersion - (int) (Math.random() * chainLen);
-//            searchVersion = mbChain.currentVersion;
-
-            s = System.nanoTime();
-            PVLB_Res bTree_res = mbChain.rangeQuery(queryArr[i][0], queryArr[i][1], searchVersion);
-            e = System.nanoTime();
-            queryTime += e - s;
-            System.out.println("alTree query time:" + (e - s) + "ns");
-
-            PVLBTree versionTree = mbChain.getVersionTree(searchVersion);
-
-            s = System.nanoTime();
-            mbChain.verify(versionTree, queryArr[i][0], queryArr[i][1], bTree_res);
-            e = System.nanoTime();
-            verifyTime += e - s;
-            System.out.println("alTree verify time:" + (e - s) + "ns");
-        }
+        mbChain.getIndexSize();
 
 
-        System.out.println("query time:" +  queryTime / queryLen + "ns");
-        System.out.println("verify time:" + verifyTime / queryLen + "ns");
     }
 
 }

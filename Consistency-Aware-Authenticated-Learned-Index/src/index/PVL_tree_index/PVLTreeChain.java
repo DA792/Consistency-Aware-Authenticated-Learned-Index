@@ -2,6 +2,7 @@ package index.PVL_tree_index;
 
 import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 import utils.IOTools;
+import utils.Utils;
 
 public class PVLTreeChain {
 
@@ -67,7 +68,7 @@ public class PVLTreeChain {
         long queryTime = 0, verifyTime = 0;
         long s,e;
 
-        int len = 1000000;
+        int len = 100000;
         int queryLen = 10000;
         long low = 10, high = 1000000000L;
 
@@ -76,7 +77,7 @@ public class PVLTreeChain {
         low = IOTools.low; high = IOTools.high;
 //        long[] dataset = Utils.buildRandArr(len, low, high, null);
 
-        int err = 2;
+        int err = 16;
         int chainLen = 1000;
         PVLTreeChain mbChain = new PVLTreeChain(chainLen, err);
 

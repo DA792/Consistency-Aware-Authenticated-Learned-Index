@@ -4,10 +4,11 @@ import index.learned_node_info.Model;
 import index.learned_node_info.Segment;
 import utils.Utils;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 
-public class PVLNode {
+public class PVLNode implements Serializable {
     public VoInfo voInfo;
 
     public byte[][] pies;

@@ -3,13 +3,14 @@ package index.PVLB_tree_index;
 import utils.SHA;
 import utils.Utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static index.PVLB_tree_index.PVLBTree.N;
 
-public class MBNode {
+public class MBNode implements Serializable {
     public long[] keys;
     public MBNode[] childes;
     public String hash;
