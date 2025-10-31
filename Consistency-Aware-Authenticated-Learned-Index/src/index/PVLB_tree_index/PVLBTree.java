@@ -2,7 +2,7 @@ package index.PVLB_tree_index;
 
 import index.PVL_tree_index.PVLLeafNode;
 import index.PVL_tree_index.VoInfo;
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
+// import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator; // Java 9+ 不可用
 import utils.IOTools;
 import utils.SHA;
 import utils.Utils;
@@ -346,8 +346,9 @@ public class PVLBTree {
 
     public void getIndexSize() {
         System.setProperty("java.vm.name", "Java HotSpot(TM) ");
-        long piSize = ObjectSizeCalculator.getObjectSize(root);
-        System.out.println("ALBTree size:" + piSize / 1024.0 / 1024.0 + "mb");
+        // long piSize = ObjectSizeCalculator.getObjectSize(root);
+        // System.out.println("ALBTree size:" + piSize / 1024.0 / 1024.0 + "mb");
+        System.out.println("ALBTree size: (需要 Java 8)");
     }
 
 

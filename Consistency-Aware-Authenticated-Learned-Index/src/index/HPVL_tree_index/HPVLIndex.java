@@ -3,7 +3,7 @@ package index.HPVL_tree_index;
 import index.PVLB_tree_index.PVLBTree;
 import index.PVLB_tree_index.PVLB_Res;
 import index.PVL_tree_index.PVLTree;
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
+// import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator; // Java 9+ 不可用
 import utils.IOTools;
 import utils.Utils;
 
@@ -94,23 +94,23 @@ public class HPVLIndex {
 
     public void getIndexSize() {
         System.setProperty("java.vm.name", "Java HotSpot(TM) ");
-        long sz = 0;
-        HashSet<PVLTree> st = new HashSet<>();
-        for (PVLTree PVLTree : state0.PVLTrees) {
-            if (!st.contains(PVLTree)) {
-                st.add(PVLTree);
-                sz += ObjectSizeCalculator.getObjectSize(PVLTree);
-            }
-        }
-        for (PVLTree PVLTree : state1.PVLTrees) {
-            if (!st.contains(PVLTree)) {
-                st.add(PVLTree);
-                sz += ObjectSizeCalculator.getObjectSize(PVLTree);
-            }
-        }
-
-        sz += ObjectSizeCalculator.getObjectSize(vcChain);
-        System.out.println("ALBTree size:" + sz / 1024.0 / 1024.0 + "mb");
+        // long sz = 0;
+        // HashSet<PVLTree> st = new HashSet<>();
+        // for (PVLTree PVLTree : state0.PVLTrees) {
+        //     if (!st.contains(PVLTree)) {
+        //         st.add(PVLTree);
+        //         sz += ObjectSizeCalculator.getObjectSize(PVLTree);
+        //     }
+        // }
+        // for (PVLTree PVLTree : state1.PVLTrees) {
+        //     if (!st.contains(PVLTree)) {
+        //         st.add(PVLTree);
+        //         sz += ObjectSizeCalculator.getObjectSize(PVLTree);
+        //     }
+        // }
+        // sz += ObjectSizeCalculator.getObjectSize(vcChain);
+        // System.out.println("ALBTree size:" + sz / 1024.0 / 1024.0 + "mb");
+        System.out.println("ALBTree size: (需要 Java 8)");
     }
 
 

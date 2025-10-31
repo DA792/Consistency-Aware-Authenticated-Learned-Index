@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="jars">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jcommon-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jna-3.2.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jpbc-benchmark-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jpbc-api-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jpbc-pbc-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jpbc-mm-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/bcprov-jdk16-1.46.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jfreechart-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jpbc-plaf-2.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Consistency-Aware-Authenticated-Learned-Index/jars/jpbc-crypto-2.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

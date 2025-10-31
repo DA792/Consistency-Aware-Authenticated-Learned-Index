@@ -1,13 +1,10 @@
 package index.PVLB_tree_index;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import static utils.IOTools.getFileSize;
 
 public class PVLB_Res {
     MBNode node;
@@ -32,10 +29,12 @@ public class PVLB_Res {
     public long getVOSize() {
         long fileSize = 0;
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get("VO")));
+            // 使用内存流计算大小,避免文件冲突
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteStream);
             objectOutputStream.writeObject(node);
             objectOutputStream.close();
-            fileSize = getFileSize("./VO");
+            fileSize = byteStream.size();
         } catch (IOException e) {
             e.printStackTrace();
         }

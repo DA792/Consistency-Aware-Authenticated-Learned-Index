@@ -1,7 +1,7 @@
 package index.PVL_tree_index;
 
 import index.learned_node_info.*;
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
+// import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator; // Java 9+ 不可用
 import utils.IOTools;
 import utils.SHA;
 import utils.Utils;
@@ -134,6 +134,26 @@ public class PVLTree {
         VoInfo voInfo = rangeQuery(low, high, root, res);
         return new PVL_Res(voInfo, res);
     }
+
+    /**
+     * 批量范围查询 - 优化版本
+     * 注意: 当前实现为了保证正确性,仍然逐个查询,但减少了函数调用开销
+     * @param intervals 查询区间列表 [(low1,high1), (low2,high2), ...]
+     * @return 每个区间对应的查询结果列表
+     */
+    public List<PVL_Res> batchRangeQuery(List<long[]> intervals) {
+        List<PVL_Res> results = new ArrayList<>();
+        
+        // 对每个区间执行查询
+        for (long[] interval : intervals) {
+            List<Long> res = new ArrayList<>();
+            VoInfo voInfo = rangeQuery(interval[0], interval[1], root, res);
+            results.add(new PVL_Res(voInfo, res));
+        }
+        
+        return results;
+    }
+
 
 
     private PVLNode[] update(PVLNode node, long key) {
@@ -388,8 +408,10 @@ public class PVLTree {
 
     public void getIndexSize() {
         System.setProperty("java.vm.name", "Java HotSpot(TM) ");
-        long piSize = ObjectSizeCalculator.getObjectSize(root);
-        System.out.println("ALTree size:" + piSize / 1024.0 / 1024.0 + "mb");
+        // ObjectSizeCalculator 在 Java 9+ 中不可用
+        // long piSize = ObjectSizeCalculator.getObjectSize(root);
+        // System.out.println("ALTree size:" + piSize / 1024.0 / 1024.0 + "mb");
+        System.out.println("ALTree size: (需要 Java 8 或添加 ObjectSizeCalculator 库)");
     }
 
 

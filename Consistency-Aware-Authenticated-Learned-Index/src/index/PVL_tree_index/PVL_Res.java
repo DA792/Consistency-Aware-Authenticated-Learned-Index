@@ -16,13 +16,19 @@ public class PVL_Res {
         this.res = res;
     }
 
+    public List<Long> getResults() {
+        return res;
+    }
+    
     public long getVOSize() {
         long fileSize = 0;
         try {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(Files.newOutputStream(Paths.get("VO")));
+            // 使用内存流计算大小,避免文件冲突
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteStream);
             objectOutputStream.writeObject(node);
             objectOutputStream.close();
-            fileSize = getFileSize("./VO");
+            fileSize = byteStream.size();
         } catch (IOException e) {
             e.printStackTrace();
         }

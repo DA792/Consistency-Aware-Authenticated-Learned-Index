@@ -1,6 +1,6 @@
 package index.PVL_tree_index;
 
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
+// import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator; // Java 9+ 不可用
 import utils.IOTools;
 import utils.Utils;
 
@@ -57,8 +57,9 @@ public class PVLTreeChain {
 
     public void getIndexSize() {
         System.setProperty("java.vm.name", "Java HotSpot(TM) ");
-        long sz = ObjectSizeCalculator.getObjectSize(chain);
-        System.out.println("ALBTree size:" + sz / 1024.0 / 1024.0 + "mb");
+        // long sz = ObjectSizeCalculator.getObjectSize(chain);
+        // System.out.println("ALBTree size:" + sz / 1024.0 / 1024.0 + "mb");
+        System.out.println("ALBTree size: (需要 Java 8)");
     }
 
 
