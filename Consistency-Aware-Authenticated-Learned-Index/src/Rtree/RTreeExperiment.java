@@ -167,7 +167,7 @@ public class RTreeExperiment {
         
         long startTime = System.nanoTime();
         
-        // 批量插入，每10000个点显示进度
+        // 批量插入，每10000个点显示进度（适合50万数据）
         for (int i = 0; i < points.size(); i++) {
             rtree.insert(points.get(i), i);
             
@@ -267,7 +267,7 @@ public class RTreeExperiment {
         DataStats dataStats = analyzeData(points);
         // 调整选择率，适合50万数据
         double[] selectivities = {0.0001, 0.001, 0.01, 0.1};
-        int queriesPerTest = 500; // 50万数据，适当增加查询数量
+        int queriesPerTest = 500; // 50万数据，适当减少查询数量
         
         System.out.println("选择率\t查询时间(ms)\t结果数量\t访问节点\t访问叶子");
         System.out.println("------\t-----------\t--------\t--------\t--------");
